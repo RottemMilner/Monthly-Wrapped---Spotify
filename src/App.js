@@ -10,6 +10,7 @@ import TopTracks from './components/TopTracks';
 import './App.css';
 import spotifyLogo from './Spotify Logo.png';
 import TopGenresButton from './components/TopGenresButton';
+import Slideshow from './components/Slideshow';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -41,12 +42,13 @@ function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          <Link to="/" className="home-link">
+          {user ? (
+            <div className="user-greeting">
+              {user && <h2>Welcome, {user.display_name || user.id}!</h2>}
+            </div>
+          ) : (
             <h1>Spotify Monthly Wrapped</h1>
-          </Link>
-          <div className="user-greeting">
-              {user && <p>Hello {user.display_name || user.id}!</p>}
-          </div>
+          )}
           <a href="https://www.spotify.com/" target="_blank" rel="noopener noreferrer">
             <img src={spotifyLogo} alt="Spotify Logo" className="spotify-logo" />
           </a>
@@ -63,27 +65,11 @@ function App() {
                   </a>
                 )}
               </li>
-              {user && (
-                <li>
-                  <Link to="/top-tracks" className="nav-link">
-                    Top Tracks This Month
+              {user &&
+                  <Link to="/" className="home-link">
+                    <h1>Click to see your Monthly Wrapped</h1>
                   </Link>
-                </li>
-              )}
-              {user && (
-                <li>
-                  <Link to="/top-artists" className="nav-link">
-                    Top Artists This Month
-                  </Link>
-                </li>
-              )}
-              {user && (
-                <li>
-                  <Link to="/top-genres" className="nav-link">
-                    Top Genres This Months
-                  </Link>
-                </li>
-              )}
+              }
               {/* Add more navigation links for other features */}
             </ul>
           </nav>
@@ -91,11 +77,8 @@ function App() {
 
         {/* Routes */}
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home user={user} />} />
           <Route path="/login" element={<Login />} />
-          {user && <Route path="/top-artists" element={<TopArtists />} />}
-          {user && <Route path="/top-tracks" element={<TopTracks user={user}/>} />}
-          {user && <Route path="/top-genres" element={<TopGenresButton />} />}
           {/* Add more routes for other features */}
         </Routes>
       </div>
@@ -104,10 +87,14 @@ function App() {
 }
 
 // New component for the home page
-function Home() {
+function Home({ user }) {
   return (
     <div>
-      {/* Add content for the home page */}
+      {user && (
+        <>
+          <Slideshow user={user} />
+        </>
+      )}
     </div>
   );
 }

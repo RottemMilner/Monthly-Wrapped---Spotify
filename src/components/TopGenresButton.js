@@ -57,7 +57,7 @@ function TopGenresButton() {
       <h2>Top Genres This Month</h2>
       <ul className="top-tracks-list">
         {topGenres.map((genre, index) => (
-          <li key={index} className="top-artists-item">{genre}</li>
+          <li key={index} className="top-genre-item">{genre}</li>
         ))}
       </ul>
     </div>

@@ -81,6 +81,7 @@ function TopTracks({ user }) {
         {topTracks.map((track) => (
           <div key={track.id} className="top-tracks-item">
             <div className="track-info">
+            <p className="track-name">{track.name}<br/>{track.artists.map((artist) => artist.name).join(', ')}</p>
             {track.album.images.length > 0 && (
               <img
                 src={track.album.images[0].url} // Assuming you want to display the album art
@@ -88,8 +89,6 @@ function TopTracks({ user }) {
                 className="track-image"
               />
             )}
-            <p className="track-name">{track.name}</p>
-            <p className="artists">{track.artists.map((artist) => artist.name).join(', ')}</p>
             </div>
           </div>
         ))}
