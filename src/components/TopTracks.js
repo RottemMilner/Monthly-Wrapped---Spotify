@@ -73,20 +73,20 @@ function TopTracks({ user }) {
     <div>
       {showHeadline && <h2>Top Tracks This Month</h2>}
       {playlistId ? (
-        <button onClick={handleDeletePlaylist} className="clear-favorites-button">Delete Playlist</button>
+        <button onClick={handleDeletePlaylist} className="delete-playlist-button">Delete your {getCurrentMonthAndYear()} Playlist</button>
       ) : (
-        <button onClick={handleCreatePlaylist} className="search-button">Create Playlist</button>
+        <button onClick={handleCreatePlaylist} className="create-playlilst-button">Create your {getCurrentMonthAndYear()} Playlist</button>
       )}
-      <ul className="top-tracks-list">
-        {topTracks.map((track) => (
-          <div key={track.id} className="top-tracks-item">
-            <div className="track-info">
-            <p className="track-name">{track.name}<br/>{track.artists.map((artist) => artist.name).join(', ')}</p>
+      <ul className="atop-artists-container">
+        {topTracks.slice(0,5).map((track, index) => (
+          <div key={track.id} className="atop-artists-item">
+            <div className="aartist-info">
+            <p className="aartist-name">{index + 1}. {track.name}<br/><div className='artists'>{track.artists.map((artist) => artist.name).join(', ')}</div></p>
             {track.album.images.length > 0 && (
               <img
                 src={track.album.images[0].url} // Assuming you want to display the album art
                 alt={track.name}
-                className="track-image"
+                className="aartist-image"
               />
             )}
             </div>
