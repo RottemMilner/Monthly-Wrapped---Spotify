@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  client:
+    build: ./client
+    container_name: react_monthly_wrapped
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./client:/app
+      - /app/node_modules
