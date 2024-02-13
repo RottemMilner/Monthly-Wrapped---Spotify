@@ -1,67 +1,69 @@
-
 //Based on artists
 
 // components/TopGenresButton.js
 
-import React, { useState, useEffect } from 'react';
-import spotifyApi from '../spotifyAuth';
+import React, { useState, useEffect } from "react";
+import spotifyApi from "../spotifyAuth";
 
 function TopGenresButton() {
   const [topGenres, setTopGenres] = useState([]);
 
   const getTopGenres = async () => {
     try {
-      const response = await spotifyApi.getMyTopArtists({ limit: 50, time_range: 'short_term' });
+      const response = await spotifyApi.getMyTopArtists({
+        limit: 50,
+        time_range: "short_term",
+      });
 
-    // Ensure that the response and its items property are defined
-    if (response && response.items) {
-      const genres = [];
-      
-      for (let i = 0; i < response.items.length; i++) {
-        const artist = response.items[i];
-        if (artist.genres && artist.genres.length > 0) {
+      // Ensure that the response and its items property are defined
+      if (response && response.items) {
+        const genres = [];
+        for (let i = 0; i < response.items.length; i++) {
+          const artist = response.items[i];
+          if (artist.genres && artist.genres.length > 0) {
             for (let k = 0; k < artist.genres.length; k++) {
-                const genre = artist.genres[k];
-                genres.push(genre);
-              }
+              const genre = artist.genres[k];
+              genres.push(genre);
             }
+          }
         }
-    
-      
 
-      // Count occurrences of each genre
-      const genreCounts = genres.reduce((acc, genre) => {
-        acc[genre] = (acc[genre] || 0) + 1;
-        return acc;
-      }, {});
+        // Count occurrences of each genre
+        const genreCounts = genres.reduce((acc, genre) => {
+          acc[genre] = (acc[genre] || 0) + 1;
+          return acc;
+        }, {});
 
-      // Sort genres by occurrence in descending order
-      const sortedGenres = Object.keys(genreCounts).sort((a, b) => genreCounts[b] - genreCounts[a]);
+        // Sort genres by occurrence in descending order
+        const sortedGenres = Object.keys(genreCounts).sort(
+          (a, b) => genreCounts[b] - genreCounts[a]
+        );
 
-      // Select the top 5 genres
-      const top5Genres = sortedGenres.slice(0, 5);
+        // Select the top 5 genres
+        const top5Genres = sortedGenres.slice(0, 5);
 
-      setTopGenres(top5Genres);
-    }
+        setTopGenres(top5Genres);
+      }
     } catch (error) {
-      console.error('Error fetching top genres:', error);
+      console.error("Error fetching top genres:", error);
     }
   };
 
   useEffect(() => {
     getTopGenres();
   }, []); // Run once on component mount
-
   return (
     <div>
       <h2>Top Genres This Month</h2>
       <ul className="top-tracks-list">
         {topGenres.map((genre, index) => (
-          <li key={index} className="top-genre-item">{genre}</li>
+          <li key={genre} className="top-genre-item">
+            {genre}
+          </li>
         ))}
       </ul>
     </div>
-  );  
+  );
 }
 
 export default TopGenresButton;
