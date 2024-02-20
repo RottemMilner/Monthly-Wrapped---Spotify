@@ -29,6 +29,18 @@ export const getTokenFromUrl = () => {
 export const setAccessToken = (token) => {
   if (token) {
     spotifyApi.setAccessToken(token);
+    localStorage.setItem('spotifyAccessToken', token); 
+  }
+};
+
+export const getAccessTokenFromStorage = () => {
+  return localStorage.getItem('spotifyAccessToken');
+};
+
+export const initializeAccessToken = () => {
+  const storedToken = getAccessTokenFromStorage();
+  if (storedToken) {
+    spotifyApi.setAccessToken(storedToken);
   }
 };
 

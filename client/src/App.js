@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { getTokenFromUrl, setAccessToken, loginUrl } from './spotifyAuth';
+import { getTokenFromUrl, setAccessToken, loginUrl , getAccessTokenFromStorage ,initializeAccessToken } from './spotifyAuth';
 import spotifyApi from './spotifyAuth';
 import Login from './components/Login';
 import TopArtists from './components/TopArtists';
@@ -16,18 +16,23 @@ function App() {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const hash = getTokenFromUrl();
-    window.location.hash = '';
-    const token = hash.access_token;
+    initializeAccessToken(); // Set the access token if available in localStorage
+    const token = getAccessTokenFromStorage();
 
+    if(!token){
+      const hash = getTokenFromUrl();
+      window.location.hash = '';
+      token = hash.access_token;
+    }
+  
     if (token) {
       setAccessToken(token);
-
+  
       // Fetch user data
       spotifyApi.getMe().then((userData) => {
         setUser(userData);
       });
-    }    
+    }   
   }, []);
 
   const handleLogout = () => {
