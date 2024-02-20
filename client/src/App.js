@@ -24,11 +24,19 @@ function App() {
   const setUser = (user) => {
     _setUser(user);
     axios
-      .post(postUserUrl, {
-        display_name: user.display_name,
-        id: user.id,
-        email: user.email,
-      })
+      .post(
+        postUserUrl,
+        {
+          display_name: user.display_name,
+          id: user.id,
+          email: user.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getAccessTokenFromStorage()}`,
+          },
+        }
+      )
       .then((res) => console.log("Sent user to MongoDB", res))
       .catch((err) => console.error("Error registering user to MongoDB"));
   };

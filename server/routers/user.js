@@ -1,10 +1,27 @@
 const express = require("express");
 const User = require("../db/models/user");
+const Track = require("../db/models/track");
+const getRecentlyPlayedTracks = require("../utils/recentlyPlayed");
+
 const router = new express.Router();
 
 router.post("/users", async (req, res) => {
   const user = new User(req.body);
-  console.log("Server got User", user)
+  try {
+    const accessToken = req.headers["authorization"];
+    const tracksData = await getRecentlyPlayedTracks(accessToken);
+    const trackDocs = await Promise.all(
+      tracksData.map((trackInfo) => {
+        const track = new Track(trackInfo);
+        return track.save();
+      })
+    );
+
+    user.tracks = trackDocs.map((doc) => doc._id);
+  } catch (err) {
+    console.log("Error getting user tracks:", err);
+  }
+
   try {
     await user.save();
     res.status(201).send(user);
