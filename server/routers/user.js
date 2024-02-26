@@ -1,39 +1,39 @@
 const express = require("express");
 const User = require("../db/models/user");
-const Track = require("../db/models/track");
+const { Track, insertTracks } = require("../db/models/track");
 const getRecentlyPlayedTracks = require("../utils/recentlyPlayed");
 
 const router = new express.Router();
 
 router.post("/users", async (req, res) => {
-  const user = new User(req.body);
+  const user = req.body;
   try {
     const accessToken = req.headers["authorization"];
     const tracksData = await getRecentlyPlayedTracks(accessToken);
-    const trackDocs = await Promise.all(
-      tracksData.map((trackInfo) => {
-        const track = new Track(trackInfo);
-        return track.save();
-      })
+    const upsertedIds = await insertTracks(tracksData);
+
+    const value = await User.findOneAndUpdate(
+      { spotifyId: user.spotifyId },
+      { $set: user, $addToSet: { tracks: upsertedIds } },
+      {
+        upsert: true, // Create a new document if no match is found
+        new: true,
+      }
     );
 
-    user.tracks = trackDocs.map((doc) => doc._id);
-  } catch (err) {
-    console.log("Error getting user tracks:", err);
-  }
-
-  try {
-    await user.save();
-    res.status(201).send(user);
+    res.status(201).send(value);
   } catch (e) {
     res.status(400).send(e);
   }
 });
 
 router.get("/users/:id", async (req, res) => {
-  const _id = req.params.id;
+  const spotifyId = req.params.id;
   try {
-    const user = await User.findById(_id);
+    // 'populate' fetchs the tracks for the user
+    const user = await User.findOne({ spotifyId: spotifyId }).populate(
+      "tracks"
+    );
     if (!user) {
       return res.status(404).send();
     }
@@ -44,9 +44,9 @@ router.get("/users/:id", async (req, res) => {
 });
 
 router.delete("/users/:id", async (req, res) => {
-  const _id = req.params.id;
+  const spotifyId = req.params.id;
   try {
-    const user = await User.findByIdAndDelete(_id);
+    const user = await User.findOneAndDelete({ spotifyId: spotifyId });
     if (!user) {
       return res.status(404).send();
     }
