@@ -1,38 +1,64 @@
 // App.js
 
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { getTokenFromUrl, setAccessToken, loginUrl , getAccessTokenFromStorage ,initializeAccessToken } from './spotifyAuth';
-import spotifyApi from './spotifyAuth';
-import Login from './components/Login';
-import TopArtists from './components/TopArtists';
-import TopTracks from './components/TopTracks';
-import './App.css';
-import spotifyLogo from './Spotify Logo.png';
-import TopGenresButton from './components/TopGenresButton';
-import Slideshow from './components/Slideshow';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import {
+  getTokenFromUrl,
+  setAccessToken,
+  loginUrl,
+  getAccessTokenFromStorage,
+  initializeAccessToken,
+} from "./spotifyAuth";
+import spotifyApi from "./spotifyAuth";
+import Login from "./components/Login";
+import "./App.css";
+import spotifyLogo from "./Spotify Logo.png";
+import Slideshow from "./components/Slideshow";
+import axios from "axios";
+
+const postUserUrl = "http://localhost:4000/users/"; // temp
 
 function App() {
-  const [user, setUser] = useState(null);
+  const [user, _setUser] = useState(null);
+
+  const setUser = (user) => {
+    _setUser(user);
+    axios
+      .post(
+        postUserUrl,
+        {
+          display_name: user.display_name,
+          id: user.id,
+          email: user.email,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${getAccessTokenFromStorage()}`,
+          },
+        }
+      )
+      .then((res) => console.log("Sent user to MongoDB", res))
+      .catch((err) => console.error("Error registering user to MongoDB"));
+  };
 
   useEffect(() => {
     initializeAccessToken(); // Set the access token if available in localStorage
-    const token = getAccessTokenFromStorage();
+    let token = getAccessTokenFromStorage();
 
-    if(!token){
+    if (!token) {
       const hash = getTokenFromUrl();
-      window.location.hash = '';
+      window.location.hash = "";
       token = hash.access_token;
     }
-  
+
     if (token) {
       setAccessToken(token);
-  
+
       // Fetch user data
       spotifyApi.getMe().then((userData) => {
         setUser(userData);
       });
-    }   
+    }
   }, []);
 
   const handleLogout = () => {
@@ -41,7 +67,6 @@ function App() {
     setAccessToken(null);
     setUser(null);
   };
-
 
   return (
     <Router>
@@ -54,8 +79,16 @@ function App() {
           ) : (
             <h1>Spotify Monthly Wrapped</h1>
           )}
-          <a href="https://www.spotify.com/" target="_blank" rel="noopener noreferrer">
-            <img src={spotifyLogo} alt="Spotify Logo" className="spotify-logo" />
+          <a
+            href="https://www.spotify.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={spotifyLogo}
+              alt="Spotify Logo"
+              className="spotify-logo"
+            />
           </a>
           <nav>
             <ul>
@@ -70,11 +103,11 @@ function App() {
                   </a>
                 )}
               </li>
-              {user &&
-                  <Link to="/" className="home-link">
-                    <h1>Click to see your Monthly Wrapped</h1>
-                  </Link>
-              }
+              {user && (
+                <Link to="/" className="home-link">
+                  <h1>Click to see your Monthly Wrapped</h1>
+                </Link>
+              )}
               {/* Add more navigation links for other features */}
             </ul>
           </nav>
@@ -105,4 +138,3 @@ function Home({ user }) {
 }
 
 export default App;
-
