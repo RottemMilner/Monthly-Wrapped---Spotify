@@ -1,28 +1,37 @@
-// spotifyAuth.js
-
 import SpotifyWebApi from "spotify-web-api-js";
 
-const spotifyApi = new SpotifyWebApi();
-const redirectUri = "http://localhost:3000/callback"; // Your redirect URI
+const genreateLoginUrl = () => {
+  const authEndpoint = "https://accounts.spotify.com/authorize";
+  const clientId = process.env.SPOTIFY_CLENT_ID;
+  const redirectUri = "http://localhost:3000/callback";
 
-export const authEndpoint = "https://accounts.spotify.com/authorize";
-const clientId = process.env.SPOTIFY_CLENT_ID
+  const scopes = [
+    "user-read-private",
+    "user-read-email",
+    "user-read-recently-played",
+    "user-top-read",
+    "user-read-currently-playing",
+    "playlist-modify-public",
+    "playlist-modify-private",
+    "app-remote-control",
+    "streaming",
+  ];
 
-const scopes = [
-  "user-read-private",
-  "user-read-email",
-  "user-read-recently-played",
-  "user-top-read",
-  "user-read-currently-playing",
-  "playlist-modify-public",
-  "playlist-modify-private",
-  "app-remote-control",
-  "streaming",
-]; // Add more scopes as needed
+  const url = new URL(authEndpoint);
+  const params = {
+    client_id: clientId,
+    redirect_uri: redirectUri,
+    scope: scopes.join(" "),
+    response_type: "token",
+    show_dialog: "true",
+  };
 
-export const loginUrl = `${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-  "%20"
-)}&response_type=token&show_dialog=true`;
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.append(key, value);
+  });
+
+  return url.href;
+};
 
 export const getTokenFromUrl = () => {
   return window.location.hash
@@ -53,5 +62,8 @@ export const initializeAccessToken = () => {
     spotifyApi.setAccessToken(storedToken);
   }
 };
+
+export const loginUrl = genreateLoginUrl();
+const spotifyApi = new SpotifyWebApi();
 
 export default spotifyApi;

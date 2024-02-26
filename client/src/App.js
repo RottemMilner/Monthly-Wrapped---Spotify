@@ -23,6 +23,8 @@ function App() {
 
   const setUser = (user) => {
     _setUser(user);
+    if (!user) return;
+
     axios
       .post(
         postUserUrl,
