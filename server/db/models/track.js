@@ -1,29 +1,40 @@
 const mongoose = require("mongoose");
 
 const trackSchema = new mongoose.Schema({
-  // album: albumSchema,
-  // artists: [artistSchema],
-  // available_markets: [String],
-  // disc_number: Number,
-  duration_ms: Number,
-  // explicit: Boolean,
-  // external_ids: {
-  //   isrc: String
-  // },
-  // external_urls: {
-  //   spotify: String
-  // },
-  href: String,
-  id: { type: String, required: true },
-  // is_local: Boolean,
+  spotifyId: { type: String, required: true },
   name: String,
-  // popularity: Number,
-  // preview_url: String,
-  // track_number: Number,
-  // type: String,
-  // uri: String
+  played_at: { type: Date, required: true },
+  duration_ms: Number,
+  href: String,
 });
+trackSchema.index({ spotifyId: 1, played_at: 1 }, { unique: true });
+trackSchema.index({ spotifyId: 1 });
 
 const Track = mongoose.model("Track", trackSchema);
 
-module.exports = Track;
+const insertTracks = async (tracks) => {
+  try {
+    const bulkOps = tracks.map((track) => ({
+      updateOne: {
+        filter: { spotifyId: track.spotifyId, played_at: track.played_at },
+        update: { $set: track },
+        upsert: true,
+      },
+    }));
+
+    const result = await Track.bulkWrite(bulkOps, { ordered: false });
+    console.log("Bulk operation success:", result);
+
+    // Extract upsertedIds and matched document ids if needed
+    const upsertedIds = result.upsertedIds
+      ? Object.values(result.upsertedIds)
+      : [];
+
+    return upsertedIds;
+  } catch (err) {
+    console.error("Error in bulk insertion:", err);
+    throw err; // Or handle it as needed
+  }
+};
+
+module.exports = { Track, insertTracks };

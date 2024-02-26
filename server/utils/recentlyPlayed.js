@@ -10,12 +10,13 @@ const getRecentlyPlayedTracks = (token) => {
     })
     .then((result) => {
       return result.data.items.map((item) => {
-        track = item.track
+        track = item.track;
         return {
+          spotifyId: track.id,
+          name: track.name,
+          played_at: item.played_at,
           duration_ms: track.duration_ms,
           href: track.href,
-          id: track.id,
-          name: track.name,
         };
       });
     })

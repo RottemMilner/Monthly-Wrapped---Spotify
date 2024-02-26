@@ -30,7 +30,7 @@ function App() {
         postUserUrl,
         {
           display_name: user.display_name,
-          id: user.id,
+          spotifyId: user.id,
           email: user.email,
         },
         {
