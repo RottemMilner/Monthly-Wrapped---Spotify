@@ -47,6 +47,12 @@ function App() {
     initializeAccessToken(); // Set the access token if available in localStorage
     let token = getAccessTokenFromStorage();
 
+    if(!token){
+      const hash = getTokenFromUrl();
+      window.location.hash = "";
+      token = hash.access_token;
+    }
+
     if (token) {
       setAccessToken(token);
       // Fetch user data
@@ -59,10 +65,6 @@ function App() {
           localStorage.removeItem("spotifyAccessToken");
           console.error("Error fetching user data", err);
         });
-    } else {
-      const hash = getTokenFromUrl();
-      window.location.hash = "";
-      token = hash.access_token;
     }
   }, []);
 
