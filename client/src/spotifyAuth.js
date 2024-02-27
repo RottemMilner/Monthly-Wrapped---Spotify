@@ -2,7 +2,7 @@ import SpotifyWebApi from "spotify-web-api-js";
 
 const genreateLoginUrl = () => {
   const authEndpoint = "https://accounts.spotify.com/authorize";
-  const clientId = process.env.SPOTIFY_CLENT_ID;
+  const clientId = process.env.REACT_APP_SPOTIFY_CLENT_ID;
   const redirectUri = "http://localhost:3000/callback";
 
   const scopes = [
@@ -51,7 +51,6 @@ export const setAccessToken = (token) => {
     localStorage.setItem("spotifyAccessToken", token);
   }
 };
-
 export const getAccessTokenFromStorage = () => {
   return localStorage.getItem("spotifyAccessToken");
 };
