@@ -1,25 +1,23 @@
-// App.js
-
 import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import {
-  getTokenFromUrl,
-  setAccessToken,
-  loginUrl,
-  getAccessTokenFromStorage,
-  initializeAccessToken,
-} from "./spotifyAuth";
-import spotifyApi from "./spotifyAuth";
 import Login from "./components/Login";
 import "./App.css";
 import spotifyLogo from "./Spotify Logo.png";
 import Slideshow from "./components/Slideshow";
+import spotifyApi from "./api/auth";
+import Redirect from "./components/Callback";
 import axios from "axios";
 
 const postUserUrl = "http://localhost:4000/users/"; // temp
 
 function App() {
   const [user, _setUser] = useState(null);
+  const [accessToken, _setAccessToken] = useState(null);
+
+  const setAccessToken = (token) => {
+    _setAccessToken(token);
+    localStorage.setItem("access_token", token);
+  };
 
   const setUser = (user) => {
     _setUser(user);
@@ -35,42 +33,35 @@ function App() {
         },
         {
           headers: {
-            Authorization: `Bearer ${getAccessTokenFromStorage()}`,
+            Authorization: `Bearer ${accessToken}`,
           },
         }
       )
       .then((res) => console.log("Sent user to MongoDB", res))
-      .catch((err) => console.error("Error registering user to MongoDB"));
+      .catch((err) => console.error("Error registering user to MongoDB", err));
   };
 
   useEffect(() => {
-    initializeAccessToken(); // Set the access token if available in localStorage
-    let token = getAccessTokenFromStorage();
-
-    if(!token){
-      const hash = getTokenFromUrl();
-      window.location.hash = "";
-      token = hash.access_token;
-    }
-
-    if (token) {
-      setAccessToken(token);
-      // Fetch user data
+    if (accessToken) {
+      spotifyApi.setAccessToken(accessToken);
       spotifyApi
         .getMe()
         .then((userData) => {
           setUser(userData);
         })
         .catch((err) => {
-          localStorage.removeItem("spotifyAccessToken");
+          localStorage.removeItem("access_token");
           console.error("Error fetching user data", err);
         });
+    } else {
+      const token = localStorage.getItem("access_token");
+      if (token) {
+        setAccessToken(token);
+      }
     }
-  }, []);
+  }, [accessToken]);
 
   const handleLogout = () => {
-    // Implement logout logic
-    // For example, you can clear the access token and user data
     setAccessToken(null);
     setUser(null);
   };
@@ -105,9 +96,9 @@ function App() {
                     Logout
                   </button>
                 ) : (
-                  <a href={loginUrl} className="login-button">
-                    Login with Spotify
-                  </a>
+                  <Link to="/login" className="login-link">
+                    login
+                  </Link>
                 )}
               </li>
               {user && (
@@ -115,7 +106,6 @@ function App() {
                   <h1>Click to see your Monthly Wrapped</h1>
                 </Link>
               )}
-              {/* Add more navigation links for other features */}
             </ul>
           </nav>
         </header>
@@ -124,7 +114,10 @@ function App() {
         <Routes>
           <Route path="/" element={<Home user={user} />} />
           <Route path="/login" element={<Login />} />
-          {/* Add more routes for other features */}
+          <Route
+            path="/callback"
+            element={<Redirect setAccessToken={setAccessToken} />}
+          />
         </Routes>
       </div>
     </Router>
