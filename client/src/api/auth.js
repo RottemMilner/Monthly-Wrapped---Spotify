@@ -22,8 +22,7 @@ export const generateRandomString = (length) => {
   return values.reduce((acc, x) => acc + possible[x % possible.length], "");
 };
 
-// axios instance
-export const api = axios.create({
+const spotify = axios.create({
   baseURL: `https://accounts.spotify.com/api`,
   headers: {
     "Content-Type": "application/x-www-form-urlencoded",
@@ -32,7 +31,7 @@ export const api = axios.create({
 
 export const generateToken = (code) => {
   return new Promise((resolve, reject) => {
-    api
+    spotify
       .post("/token", {
         grant_type: "authorization_code",
         client_id: process.env.REACT_APP_SPOTIFY_CLENT_ID,
@@ -43,6 +42,7 @@ export const generateToken = (code) => {
       .then((res) => {
         if (res.status === 200) {
           localStorage.setItem("access_token", res.data.access_token);
+          localStorage.setItem("refresh_token", res.data.refresh_token);
           resolve(res.data.access_token);
         }
       })
@@ -55,20 +55,18 @@ export const generateToken = (code) => {
 
 const isTokenValid = async () => {
   const token = localStorage.getItem("access_token");
-  await axios
-    .create({
+  await spotify
+    .get("/me", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
-    .get("/me")
     .then((res) => {
       if (res.status === 200) {
         return true;
       }
     })
     .catch((error) => {
-      //   console.error(error);
       return false;
     });
 };

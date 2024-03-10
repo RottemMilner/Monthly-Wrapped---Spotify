@@ -5,14 +5,11 @@ const Redirect = ({ setAccessToken }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Access code after successful login.
     const urlParams = new URLSearchParams(window.location.search);
     let code = urlParams.get("code");
 
-    // Checking for the presence of a token.
     const token = localStorage.getItem("access_token");
     if (!token) {
-      // Utilizing the previously created generateToken request function.
       generateToken(code)
         .then((res) => {
           setAccessToken(res);

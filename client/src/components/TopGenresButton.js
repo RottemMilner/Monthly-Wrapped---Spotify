@@ -3,7 +3,7 @@
 // components/TopGenresButton.js
 
 import React, { useState, useEffect } from "react";
-import spotifyApi from "../spotifyAuth";
+import spotifyApi from "../api/auth";
 
 function TopGenresButton() {
   const [topGenres, setTopGenres] = useState([]);

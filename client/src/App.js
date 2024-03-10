@@ -6,9 +6,8 @@ import spotifyLogo from "./Spotify Logo.png";
 import Slideshow from "./components/Slideshow";
 import spotifyApi from "./api/auth";
 import Redirect from "./components/Callback";
-import axios from "axios";
 
-const postUserUrl = "http://localhost:4000/users/"; // temp
+import { createOrUpdateUser } from "./api/api";
 
 function App() {
   const [user, _setUser] = useState(null);
@@ -23,20 +22,7 @@ function App() {
     _setUser(user);
     if (!user) return;
 
-    axios
-      .post(
-        postUserUrl,
-        {
-          display_name: user.display_name,
-          spotifyId: user.id,
-          email: user.email,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
+    createOrUpdateUser(user)
       .then((res) => console.log("Sent user to MongoDB", res))
       .catch((err) => console.error("Error registering user to MongoDB", err));
   };
@@ -102,7 +88,7 @@ function App() {
                 )}
               </li>
               {user && (
-                <Link to="/" className="home-link">
+                <Link to="/wrapped" className="home-link">
                   <h1>Click to see your Monthly Wrapped</h1>
                 </Link>
               )}
@@ -112,7 +98,7 @@ function App() {
 
         {/* Routes */}
         <Routes>
-          <Route path="/" element={<Home user={user} />} />
+          <Route path="/wrapped" element={<Home user={user} />} />
           <Route path="/login" element={<Login />} />
           <Route
             path="/callback"
