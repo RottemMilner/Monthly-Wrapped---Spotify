@@ -1,7 +1,7 @@
 // page/Login.js
 // url : /login
 import React, { useEffect } from "react";
-import { sha256, base64encode, generateRandomString } from "../api/auth";
+import { sha256, base64encode, generateRandomString } from "../api/spotifyApi";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {

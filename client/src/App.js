@@ -4,7 +4,7 @@ import Login from "./components/Login";
 import "./App.css";
 import spotifyLogo from "./Spotify Logo.png";
 import Slideshow from "./components/Slideshow";
-import spotifyApi from "./api/auth";
+import spotifyApi from "./api/spotifyApi";
 import Redirect from "./components/Callback";
 
 import { createOrUpdateUser } from "./api/api";

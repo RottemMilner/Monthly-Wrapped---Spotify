@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { generateToken } from "../api/auth";
+import { generateToken } from "../api/spotifyApi";
 import { useNavigate } from "react-router-dom";
 const Redirect = ({ setAccessToken }) => {
   const navigate = useNavigate();
