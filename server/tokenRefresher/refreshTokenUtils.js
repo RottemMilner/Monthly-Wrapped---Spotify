@@ -49,7 +49,7 @@ export const postRefreshTokenRequest = (oldRefreshToken) => {
       })
       .then((res) => {
         const { access_token, refresh_token } = res.data;
-        logger.debug("Refreshed token", { access_token, refresh_token });
+        logger.debug({ access_token, refresh_token }, "Refreshed token");
         resolve({ access_token, refresh_token });
       })
       .catch((error) => {

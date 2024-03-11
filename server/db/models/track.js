@@ -27,7 +27,8 @@ export const insertTracks = async (tracks) => {
     }));
 
     const result = await Track.bulkWrite(bulkOps, { ordered: false });
-    logger.debug("Bulk operation success:", result.isOk());
+    logger.info({ ok: result.isOk() }, "Bulk operation success:");
+    logger.debug(result, "Bulk operation result:");
 
     // Extract upsertedIds and matched document ids if needed
     const upsertedIds = result.upsertedIds

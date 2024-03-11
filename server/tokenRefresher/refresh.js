@@ -45,4 +45,4 @@ function job() {
 }
 
 job();
-setInterval(job, 1000 * 60 * 15);
+setInterval(job, 1000 * 60 * 45);

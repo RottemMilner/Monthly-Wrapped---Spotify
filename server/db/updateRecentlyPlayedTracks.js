@@ -13,7 +13,7 @@ import logger from "../utils/logger.js";
 export const updateRecentlyPlayedTracks = async (token, userSpotifyId) => {
   const user = { spotifyId: userSpotifyId };
   const tracksData = await getRecentlyPlayedTracks(token);
-  logger.debug(user, "tracksData", tracksData);
+  logger.debug({ user: user, tracks: tracksData }, "tracksData");
   if (!tracksData || tracksData.length === 0) {
     return user;
   }
@@ -22,7 +22,6 @@ export const updateRecentlyPlayedTracks = async (token, userSpotifyId) => {
   connectDB();
 
   const upsertedIds = await insertTracks(tracksData);
-  logger.debug(user, "tracksData", tracksData);
 
   return User.findOneAndUpdate(
     { spotifyId: userSpotifyId },
