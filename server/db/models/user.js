@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
@@ -11,6 +11,4 @@ const spotifyUserSchema = new mongoose.Schema({
 
 spotifyUserSchema.index({ spotifyId: 1 });
 
-const User = mongoose.model("User", spotifyUserSchema);
-
-module.exports = User;
+export const User = mongoose.model("User", spotifyUserSchema);

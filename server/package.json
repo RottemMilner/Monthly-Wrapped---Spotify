@@ -2,7 +2,9 @@
   "name": "complete-docker",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "engines": {"node": ">=16"},
+  "exports": "./index.js",
+  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon -L app.js"
@@ -12,7 +14,9 @@
   "dependencies": {
     "axios": "^1.6.7",
     "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
     "express": "^4.17.2",
+    "lowdb": "^7.0.1",
     "mongoose": "^8.1.3"
   }
 }

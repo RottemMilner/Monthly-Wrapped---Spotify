@@ -1,20 +1,25 @@
-const express = require("express");
-const User = require("../db/models/user");
-const { Track, insertTracks } = require("../db/models/track");
-const getRecentlyPlayedTracks = require("../utils/recentlyPlayed");
+import express from "express";
+
+import { User } from "../db/models/user.js";
+import { Track, insertTracks } from "../db/models/track.js";
+import { getRecentlyPlayedTracks } from "../utils/recentlyPlayed.js";
+import { addOrUpdateToken } from "../tokenRefresher/refreshTokenUtils.js";
 
 const router = new express.Router();
 
 router.post("/users", async (req, res) => {
-  const user = req.body;
+  const { user, refreshToken } = req.body;
   try {
     const accessToken = req.headers["authorization"];
+
+    addOrUpdateToken(user.spotifyId, refreshToken, accessToken);
+
     const tracksData = await getRecentlyPlayedTracks(accessToken);
-    const upsertedIds = await insertTracks(tracksData);
+    const upserteracksdIds = await insertTracks(tracksData);
 
     const value = await User.findOneAndUpdate(
       { spotifyId: user.spotifyId },
-      { $set: user, $addToSet: { tracks: upsertedIds } },
+      { $set: user, $addToSet: { tracks: upserteracksdIds } },
       {
         upsert: true, // Create a new document if no match is found
         new: true,
@@ -56,4 +61,4 @@ router.delete("/users/:id", async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;

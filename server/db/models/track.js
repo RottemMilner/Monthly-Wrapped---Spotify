@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const trackSchema = new mongoose.Schema({
   spotifyId: { type: String, required: true },
@@ -10,10 +10,13 @@ const trackSchema = new mongoose.Schema({
 trackSchema.index({ spotifyId: 1, played_at: 1 }, { unique: true });
 trackSchema.index({ spotifyId: 1 });
 
-const Track = mongoose.model("Track", trackSchema);
+export const Track = mongoose.model("Track", trackSchema);
 
-const insertTracks = async (tracks) => {
+export const insertTracks = async (tracks) => {
   try {
+    if (!Array.isArray(tracks) || tracks.length === 0) {
+      return [];
+    }
     const bulkOps = tracks.map((track) => ({
       updateOne: {
         filter: { spotifyId: track.spotifyId, played_at: track.played_at },
@@ -33,8 +36,6 @@ const insertTracks = async (tracks) => {
     return upsertedIds;
   } catch (err) {
     console.error("Error in bulk insertion:", err);
-    throw err; // Or handle it as needed
+    throw err;
   }
 };
-
-module.exports = { Track, insertTracks };

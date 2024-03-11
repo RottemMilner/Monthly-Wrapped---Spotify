@@ -1,12 +1,8 @@
-const express = require("express");
-const cors = require("cors");
-const mongoose = require("mongoose");
-
-const connectDB = require("./db/dbConn");
-// const User = require("./db/models/user");
-// const Track = require("./db/models/track");
-const userRouter = require("./routers/user");
-// const trackRouter = require("./routers/track");
+import express from "express";
+import cors from "cors";
+import mongoose from "mongoose";
+import { connectDB } from "./db/dbConn.js";
+import userRouter from "./routers/user.js";
 
 connectDB();
 const app = express();
@@ -16,7 +12,6 @@ app.use(express.json());
 
 app.use(userRouter);
 
-
 app.get("/", (req, res) => {
   res.json([
     {
@@ -25,10 +20,8 @@ app.get("/", (req, res) => {
   ]);
 });
 
-
 mongoose.connection.once("open", () => {
   console.log("Connected to MongoDB");
-
   app.listen(4000, () => {
     console.log("listening for requests on port 4000");
   });
