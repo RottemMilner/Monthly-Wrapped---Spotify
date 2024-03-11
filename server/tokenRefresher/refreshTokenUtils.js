@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { JSONFilePreset } from "lowdb/node";
+import logger from "../utils/logger.js";
 
 const db = await JSONFilePreset("db.json", { userToTokens: [] });
 await db.read();
@@ -38,21 +39,21 @@ export const getToken = async (userSpotifyId) => {
 
 //*------------------------------------------------------------------- */
 
-export const refreshToken = (refresh_token) => {
+export const postRefreshTokenRequest = (oldRefreshToken) => {
   return new Promise((resolve, reject) => {
     spotify
       .post("/token", {
         grant_type: "refresh_token",
         client_id: process.env.SPOTIFY_CLENT_ID,
-        refresh_token: refresh_token,
+        refresh_token: oldRefreshToken,
       })
       .then((res) => {
         const { access_token, refresh_token } = res.data;
-        // console.log("Refreshed token", { access_token, refresh_token });
+        logger.debug("Refreshed token", { access_token, refresh_token });
         resolve({ access_token, refresh_token });
       })
       .catch((error) => {
-        console.error("Error refreshing token", error);
+        logger.error("Error refreshing token", error);
         reject(error);
       });
   });

@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import logger from "../../utils/logger.js";
 
 const trackSchema = new mongoose.Schema({
   spotifyId: { type: String, required: true },
@@ -26,16 +27,19 @@ export const insertTracks = async (tracks) => {
     }));
 
     const result = await Track.bulkWrite(bulkOps, { ordered: false });
-    // console.log("Bulk operation success:", result);
+    logger.debug("Bulk operation success:", result.isOk());
 
     // Extract upsertedIds and matched document ids if needed
     const upsertedIds = result.upsertedIds
       ? Object.values(result.upsertedIds)
       : [];
 
+    logger.info(
+      `Inserted ${result.insertedCount} new tracks into the database.`
+    );
     return upsertedIds;
   } catch (err) {
-    console.error("Error in bulk insertion:", err);
+    logger.error("Error in bulk insertion:", err);
     throw err;
   }
 };

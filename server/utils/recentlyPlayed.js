@@ -1,8 +1,9 @@
 import axios from "axios";
+import logger from "./logger.js";
 
 export const getRecentlyPlayedTracks = (token) => {
-  const url = "https://api.spotify.com/v1/me/player/recently-played?limit=1";
-  // const url = "https://api.spotify.com/v1/me/player/recently-played?limit=50";
+  // const url = "https://api.spotify.com/v1/me/player/recently-played?limit=1";
+  const url = "https://api.spotify.com/v1/me/player/recently-played?limit=50";
   return axios
     .get(url, {
       headers: {
@@ -22,6 +23,6 @@ export const getRecentlyPlayedTracks = (token) => {
       });
     })
     .catch((err) => {
-      console.error("Error fetching recently played:", err);
+      logger.error("Error fetching recently played:", err);
     });
 };

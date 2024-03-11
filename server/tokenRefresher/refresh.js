@@ -1,41 +1,48 @@
 import {
   addOrUpdateToken,
   getToken,
-  refreshToken,
+  postRefreshTokenRequest,
 } from "../tokenRefresher/refreshTokenUtils.js";
-
 import { updateRecentlyPlayedTracks } from "../db/updateRecentlyPlayedTracks.js";
-import { set } from "mongoose";
+import logger from "../utils/logger.js";
 
 // static user for now, will loop through all users in the future
 const tzvigr = "21ftkwf2rcbv6o4kbmdveukui";
-// run all of this every 15 minutes:
-setInterval(() => {
-  getToken(tzvigr)
+export function main(userSpotifyId = tzvigr) {
+  // const userLogger = logger.child({}, { msgPrefix: `[${userSpotifyId}]\t` });
+  const userLogger = logger.child({ user: userSpotifyId }, {});
+  getToken(userSpotifyId)
     .then((tokenResult) => {
-      console.log("got token", tokenResult.updated_at);
+      userLogger.info("got token");
       return tokenResult.refreshToken;
     })
     .then((token) => {
-      return refreshToken(token);
+      return postRefreshTokenRequest(token);
     })
     .then((res) => {
-      console.log("🚀 ~ refreshToken res", res);
+      userLogger.info("refreshed token");
       const { access_token, refresh_token } = res;
-      addOrUpdateToken(tzvigr, refresh_token, access_token).then(() => {
-        console.log("Updated token in json");
+      addOrUpdateToken(userSpotifyId, refresh_token, access_token).then(() => {
+        userLogger.info("Updated token in json");
       });
       return access_token;
     })
     .then((access_token) => {
-      updateRecentlyPlayedTracks(access_token, tzvigr).then((user) => {
-        console.log(
-          "Updated recently played tracks for user",
-          user.display_name
+      updateRecentlyPlayedTracks(access_token, userSpotifyId).then((user) => {
+        userLogger.info(
+          `Updated recently played tracks for user: ${user.display_name}`
         );
       });
     })
     .catch((e) => {
-      console.error("ERROR:", e);
+      userLogger.error(e);
     });
-}, 1000 * 60 * 15);
+}
+
+function job() {
+  logger.info("\n updating tokens and recently played tracks job started");
+  main();
+}
+
+job();
+setInterval(job, 1000 * 60 * 15);
