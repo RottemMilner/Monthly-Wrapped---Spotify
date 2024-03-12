@@ -1,14 +1,25 @@
 import {
   addOrUpdateToken,
+  getAllUsers,
   getToken,
   postRefreshTokenRequest,
 } from "../tokenRefresher/refreshTokenUtils.js";
 import { updateRecentlyPlayedTracks } from "../db/updateRecentlyPlayedTracks.js";
 import logger from "../utils/logger.js";
+import { hoursDiffFromNow } from "../utils/dateDiff.js";
 
-// static user for now, will loop through all users in the future
-const tzvigr = "21ftkwf2rcbv6o4kbmdveukui";
-export function main(userSpotifyId = tzvigr) {
+const findUsersToRefresh = async () => {
+  const users = await getAllUsers();
+
+  // access tokens are valid for one hour
+  const usersWithValidToken = users.filter((user) => {
+    const diff = hoursDiffFromNow(user.updated_at);
+    return diff < 1;
+  });
+  return usersWithValidToken;
+};
+
+export function refreshTokenAndUpdateUserData(userSpotifyId) {
   // const userLogger = logger.child({}, { msgPrefix: `[${userSpotifyId}]\t` });
   const userLogger = logger.child({ user: userSpotifyId }, {});
   getToken(userSpotifyId)
@@ -41,7 +52,11 @@ export function main(userSpotifyId = tzvigr) {
 
 function job() {
   logger.info("\n updating tokens and recently played tracks job started");
-  main();
+  findUsersToRefresh().then((users) => {
+    users.forEach((user) => {
+      refreshTokenAndUpdateUserData(user.userSpotifyId);
+    });
+  });
 }
 
 job();

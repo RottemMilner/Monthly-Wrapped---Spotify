@@ -37,6 +37,10 @@ export const getToken = async (userSpotifyId) => {
   return userToTokens.find((u) => u.userSpotifyId === userSpotifyId);
 };
 
+export const getAllUsers = async () => {
+  return userToTokens;
+};
+
 //*------------------------------------------------------------------- */
 
 export const postRefreshTokenRequest = (oldRefreshToken) => {
