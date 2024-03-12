@@ -1,8 +1,8 @@
 // components/TopTracks.js
 
 import React, { useState, useEffect } from "react";
-import spotifyApi from "../spotifyAuth";
 import PropTypes from "prop-types";
+import spotifyApi from "../api/spotifyApi";
 
 function TopTracks({ user }) {
   const [topTracks, setTopTracks] = useState([]);

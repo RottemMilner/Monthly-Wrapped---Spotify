@@ -1,14 +1,23 @@
-const mongoose = require("mongoose");
+import dotenv from "dotenv";
+dotenv.config("../.env");
+import mongoose from "mongoose";
+import logger from "../utils/logger.js";
 
-const uri =
-  "mongodb+srv://admin:admin@cluster0.jternz4.mongodb.net/?retryWrites=true&w=majority";
+const uri = process.env.MONGODB_URI;
 
-const connectDB = async () => {
+export const connectDB = async () => {
+  // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
+  const state = mongoose.connection.readyState;
+  if (state > 0) {
+    logger.info("Already connected to MongoDB");
+    return;
+  }
+
   try {
-    await mongoose.connect(uri, {});
+    await mongoose.connect(uri, {}).then(() => {
+      logger.info("Connected to MongoDB");
+    });
   } catch (err) {
-    console.error("Couldn't connect to MongoDB:", err);
+    logger.error("Couldn't connect to MongoDB:", err);
   }
 };
-
-module.exports = connectDB;

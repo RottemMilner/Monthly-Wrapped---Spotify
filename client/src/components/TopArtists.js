@@ -1,7 +1,7 @@
 // components/TopArtists.js
 
 import React, { useState, useEffect } from "react";
-import spotifyApi from "../spotifyAuth";
+import spotifyApi from "../api/spotifyApi";
 
 function TopArtists() {
   const [topArtists, setTopArtists] = useState([]);

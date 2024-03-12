@@ -1,7 +1,8 @@
-const User = require("./models/user");
-const { insertTracks } = require("./models/track");
-const getRecentlyPlayedTracks = require("../utils/recentlyPlayed");
-
+import { User } from "./models/user.js";
+import { insertTracks } from "./models/track.js";
+import { getRecentlyPlayedTracks } from "../utils/recentlyPlayed.js";
+import { connectDB } from "./dbConn.js";
+import logger from "../utils/logger.js";
 /**
  * Update the recently played tracks for a user,
  * we can time this functnio to run every X minutes to keep the user's data up to date
@@ -9,18 +10,25 @@ const getRecentlyPlayedTracks = require("../utils/recentlyPlayed");
  * @param {string} userSpotifyId - The user's Spotify ID
  * @returns {Promise<User>} - The updated user document
  */
-updateRecentlyPlayedTracks = async (token, userSpotifyId) => {
+export const updateRecentlyPlayedTracks = async (token, userSpotifyId) => {
+  const user = { spotifyId: userSpotifyId };
   const tracksData = await getRecentlyPlayedTracks(token);
+  logger.debug({ user: user, tracks: tracksData }, "tracksData");
+  if (!tracksData || tracksData.length === 0) {
+    return user;
+  }
+
+  // make sure we have a connection to the database
+  connectDB();
+
   const upsertedIds = await insertTracks(tracksData);
 
   return User.findOneAndUpdate(
     { spotifyId: userSpotifyId },
     { $set: user, $addToSet: { tracks: upsertedIds } },
     {
-      upsert: true, // Create a new document if no match is found
+      upsert: true,
       new: true,
     }
   );
 };
-
-module.exports = { updateRecentlyPlayedTracks };

@@ -1,16 +1,18 @@
-const axios = require("axios");
+import axios from "axios";
+import logger from "./logger.js";
 
-const getRecentlyPlayedTracks = (token) => {
+export const getRecentlyPlayedTracks = (token) => {
+  // const url = "https://api.spotify.com/v1/me/player/recently-played?limit=1";
   const url = "https://api.spotify.com/v1/me/player/recently-played?limit=50";
   return axios
     .get(url, {
       headers: {
-        Authorization: token,
+        authorization: `Bearer ${token}`,
       },
     })
     .then((result) => {
       return result.data.items.map((item) => {
-        track = item.track;
+        const track = item.track;
         return {
           spotifyId: track.id,
           name: track.name,
@@ -21,8 +23,6 @@ const getRecentlyPlayedTracks = (token) => {
       });
     })
     .catch((err) => {
-      console.error("Error fetching recently played:", err);
+      logger.error("Error fetching recently played:", err);
     });
 };
-
-module.exports = getRecentlyPlayedTracks;
