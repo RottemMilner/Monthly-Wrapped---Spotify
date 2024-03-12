@@ -1,6 +1,6 @@
 import { spotify } from "./spotifyApi.js";
 import dotenv from "dotenv";
-dotenv.config();
+dotenv.config("../.env");
 
 import { JSONFilePreset } from "lowdb/node";
 import logger from "../utils/logger.js";
