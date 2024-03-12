@@ -11,7 +11,7 @@ const Login = () => {
   window.localStorage.setItem("code_verifier", codeVerifier);
 
   const clientId = process.env.REACT_APP_SPOTIFY_CLENT_ID;
-  const redirectUri = "http://localhost:3000/callback";
+  const redirectUri = process.env.REACT_APP_REDIRECT_URI;
   const scopes = [
     "user-read-private",
     "user-read-email",
