@@ -63,17 +63,6 @@ function App() {
           ) : (
             <h1>Spotify Monthly Wrapped</h1>
           )}
-          <a
-            href="https://www.spotify.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src={spotifyLogo}
-              alt="Spotify Logo"
-              className="spotify-logo"
-            />
-          </a>
           <nav>
             <ul>
               <li>
@@ -82,7 +71,7 @@ function App() {
                     Logout
                   </button>
                 ) : (
-                  <Link to="/login" className="login-link">
+                  <Link to="/login" className="login-button">
                     login
                   </Link>
                 )}
