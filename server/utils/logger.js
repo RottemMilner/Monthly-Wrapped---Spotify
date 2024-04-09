@@ -1,8 +1,8 @@
 import pino from "pino";
 
 const logger = pino({
-  level: "debug",
-  // level: "info",
+  // level: "debug",
+  level: "info",
   transport: {
     target: "pino-pretty",
     options: {

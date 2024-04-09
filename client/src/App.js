@@ -63,7 +63,7 @@ function App() {
           ) : (
             <h1>Spotify Monthly Wrapped</h1>
           )}
-          <a
+          {/* <a
             href="https://www.spotify.com/"
             target="_blank"
             rel="noopener noreferrer"
@@ -73,7 +73,7 @@ function App() {
               alt="Spotify Logo"
               className="spotify-logo"
             />
-          </a>
+          </a> */}
           <nav>
             <ul>
               <li>
