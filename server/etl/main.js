@@ -58,5 +58,6 @@ function job() {
   });
 }
 
+const fourtyFiveMinutes = 1000 * 60 * 45;
 job();
-setInterval(job, 1000 * 60 * 45);
+setInterval(job, fourtyFiveMinutes);
