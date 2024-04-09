@@ -9,6 +9,7 @@
   "type": "module",
   "scripts": {
     "test": "jest",
+    "start": "node app.js",
     "dev": "nodemon -L app.js",
     "job": "node etl/main.js"
   },

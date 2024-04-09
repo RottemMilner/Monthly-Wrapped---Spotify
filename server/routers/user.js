@@ -7,7 +7,7 @@ import {
   getUserWithTracks,
   getMinutesListenedForUser,
 } from "../db/mongo/DButils.js";
-
+import logger from "../utils/logger.js";
 const router = new express.Router();
 
 router.post("/users", async (req, res) => {
@@ -17,9 +17,12 @@ router.post("/users", async (req, res) => {
 
     addOrUpdateToken(user.spotifyId, refreshToken, accessToken);
 
+    logger.debug(`User ${user.spotifyId} added/updated with token`);
+
     const tracksData = await getRecentlyPlayedTracks(accessToken);
     const upserteracksdIds = await insertTracks(tracksData);
 
+    logger.debug(`User ${user.spotifyId} added/updated with tracks`);
     const value = await User.findOneAndUpdate(
       { spotifyId: user.spotifyId },
       { $set: user, $addToSet: { tracks: upserteracksdIds } },
@@ -29,6 +32,7 @@ router.post("/users", async (req, res) => {
       }
     );
 
+    logger.debug(`User ${user.spotifyId} added/updated with tracks`);
     res.status(201).send(value);
   } catch (e) {
     res.status(400).send(e);

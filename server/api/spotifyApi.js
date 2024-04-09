@@ -37,14 +37,11 @@ export const postRefreshTokenRequest = (oldRefreshToken) => {
 };
 
 export const getRecentlyPlayedTracks = (token) => {
-  const endpoint = "/player/recently-played";
+  const endpoint = "/player/recently-played?limit=50";
   return spotify.me
     .get(endpoint, {
       headers: {
-        authorization: `Bearer ${token}`,
-      },
-      params: {
-        limit: 50,
+        authorization: token,
       },
     })
     .then((result) => {
