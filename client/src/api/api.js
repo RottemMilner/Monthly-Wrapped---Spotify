@@ -25,6 +25,9 @@ export const createOrUpdateUser = async (user) => {
   );
 };
 
-export const getMinutesListenedForUser = async (user) => {
-  return api.get(`/users/${user.spotifyId}/minutes`);
+export const getMinutesListenedForUser = async (spotifyId) => {
+  return api
+    .get(`/users/${spotifyId}/minutes`)
+    .then((res) => res.minutes)
+    .catch((err) => console.error("error getting minutes for user: ", err));
 };
