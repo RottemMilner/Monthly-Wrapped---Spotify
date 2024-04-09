@@ -1,21 +1,20 @@
-import {
-  addOrUpdateToken,
-  getAllUsers,
-  getToken,
-  postRefreshTokenRequest,
-} from "../tokenRefresher/refreshTokenUtils.js";
-import { updateRecentlyPlayedTracks } from "../db/updateRecentlyPlayedTracks.js";
-import logger from "../utils/logger.js";
+import { addOrUpdateToken, getAllUsers, getToken } from "../db/json/utils.js";
+import { updateRecentlyPlayedTracks } from "../db/mongo/DButils.js";
 import { hoursDiffFromNow } from "../utils/dateDiff.js";
+import { postRefreshTokenRequest } from "../api/spotifyApi.js";
+import logger from "../utils/logger.js";
 
 const findUsersToRefresh = async () => {
   const users = await getAllUsers();
+  logger.debug(`Users: ${users.length}`);
 
   // access tokens are valid for one hour
   const usersWithValidToken = users.filter((user) => {
     const diff = hoursDiffFromNow(user.updated_at);
     return diff < 1;
   });
+
+  logger.debug(`Users with valid token:  ${usersWithValidToken.length}`);
   return usersWithValidToken;
 };
 
@@ -59,5 +58,6 @@ function job() {
   });
 }
 
+const fourtyFiveMinutes = 1000 * 60 * 45;
 job();
-setInterval(job, 1000 * 60 * 45);
+setInterval(job, fourtyFiveMinutes);

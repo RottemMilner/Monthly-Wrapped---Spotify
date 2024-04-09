@@ -63,6 +63,18 @@ function App() {
           ) : (
             <h1>Spotify Monthly Wrapped</h1>
           )}
+          {/* <a
+            href="https://www.spotify.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img
+              src={spotifyLogo}
+              alt="Spotify Logo"
+              className="spotify-logo"
+            />
+          </a> */}
+
           <nav>
             <ul>
               <li>

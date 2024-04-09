@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import mongoose from "mongoose";
 import logger from "./utils/logger.js";
-import { connectDB } from "./db/dbConn.js";
+import { connectDB } from "./db/mongo/dbConn.js";
 import userRouter from "./routers/user.js";
 
 connectDB();

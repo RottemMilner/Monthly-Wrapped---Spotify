@@ -34,7 +34,7 @@ export const generateToken = (code) => {
     spotify
       .post("/token", {
         grant_type: "authorization_code",
-        client_id: process.env.REACT_APP_SPOTIFY_CLENT_ID,
+        client_id: process.env.REACT_APP_SPOTIFY_CLIENT_ID,
         code_verifier: localStorage.getItem("code_verifier"),
         redirect_uri: process.env.REACT_APP_REDIRECT_URI,
         code,

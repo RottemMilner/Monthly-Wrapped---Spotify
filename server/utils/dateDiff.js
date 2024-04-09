@@ -1,6 +1,6 @@
 /**
  * Example usage:
- * const dateString = "3/12/2024, 11:15:26 AM"; // this is the output of 'new Date(Date.now()).toLocaleString();'
+ * const dateString = "3/12/2024, 11:15:26 AM"; // this is the output of 'new Date(Date.now()).toISOString();'
  * const differenceInHours = hoursDiffFromNow(dateString);
  * console.log(`Difference in hours: ${differenceInHours}`); // Difference in hours: 0.57598...
  */

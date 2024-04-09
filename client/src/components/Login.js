@@ -10,7 +10,7 @@ const Login = () => {
   const codeVerifier = generateRandomString(64);
   window.localStorage.setItem("code_verifier", codeVerifier);
 
-  const clientId = process.env.REACT_APP_SPOTIFY_CLENT_ID;
+  const clientId = process.env.REACT_APP_SPOTIFY_CLIENT_ID;
   const redirectUri = process.env.REACT_APP_REDIRECT_URI;
   const scopes = [
     "user-read-private",
