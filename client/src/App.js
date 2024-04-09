@@ -74,6 +74,7 @@ function App() {
               className="spotify-logo"
             />
           </a> */}
+
           <nav>
             <ul>
               <li>
@@ -82,7 +83,7 @@ function App() {
                     Logout
                   </button>
                 ) : (
-                  <Link to="/login" className="login-link">
+                  <Link to="/login" className="login-button">
                     login
                   </Link>
                 )}
