@@ -1,5 +1,5 @@
 import { addOrUpdateToken, getAllUsers, getToken } from "../db/json/utils.js";
-import { updateRecentlyPlayedTracks } from "../db/mongo/updateRecentlyPlayedTracks.js";
+import { updateRecentlyPlayedTracks } from "../db/mongo/DButils.js";
 import { hoursDiffFromNow } from "../utils/dateDiff.js";
 import { postRefreshTokenRequest } from "../api/spotifyApi.js";
 import logger from "../utils/logger.js";

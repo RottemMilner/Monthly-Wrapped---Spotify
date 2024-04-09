@@ -24,3 +24,7 @@ export const createOrUpdateUser = async (user) => {
     }
   );
 };
+
+export const getMinutesListenedForUser = async (user) => {
+  return api.get(`/users/${user.spotifyId}/minutes`);
+};

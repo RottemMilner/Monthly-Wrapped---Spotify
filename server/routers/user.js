@@ -3,6 +3,10 @@ import { User } from "../db/mongo/models/user.js";
 import { insertTracks } from "../db/mongo/models/track.js";
 import { getRecentlyPlayedTracks } from "../api/spotifyApi.js";
 import { addOrUpdateToken } from "../db/json/utils.js";
+import {
+  getUserWithTracks,
+  getMinutesListenedForUser,
+} from "../db/mongo/DButils.js";
 
 const router = new express.Router();
 
@@ -34,14 +38,21 @@ router.post("/users", async (req, res) => {
 router.get("/users/:id", async (req, res) => {
   const spotifyId = req.params.id;
   try {
-    // 'populate' fetchs the tracks for the user
-    const user = await User.findOne({ spotifyId: spotifyId }).populate(
-      "tracks"
-    );
+    const user = await getUserWithTracks(spotifyId);
     if (!user) {
       return res.status(404).send();
     }
     res.status(200).send(user);
+  } catch (e) {
+    res.status(400).send();
+  }
+});
+
+router.get("/users/:id/minutes", async (req, res) => {
+  const spotifyId = req.params.id;
+  try {
+    const resultInMinutes = await getMinutesListenedForUser(spotifyId);
+    res.status(200).send({ minutes: resultInMinutes });
   } catch (e) {
     res.status(400).send();
   }

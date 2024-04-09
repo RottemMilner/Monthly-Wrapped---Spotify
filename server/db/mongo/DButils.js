@@ -32,3 +32,22 @@ export const updateRecentlyPlayedTracks = async (token, userSpotifyId) => {
     }
   );
 };
+
+export const getUserWithTracks = async (spotifyId) => {
+  // 'populate' fetchs the tracks for the user
+  const user = await User.findOne({ spotifyId: spotifyId }).populate("tracks");
+  return user;
+};
+
+/**
+ *
+ * @param {String} spotifyId
+ * @returns {Promise<Number>} - The total number of minutes of tracks reated to the user
+ */
+export const getMinutesListenedForUser = async (spotifyId) => {
+  const userWithTracks = await getUserWithTracks(spotifyId);
+  const totalMs = userWithTracks.tracks.reduce((total, track) => {
+    return total + track.duration_ms;
+  }, 0);
+  return totalMs / 1000 / 60; // convert ms to minutes
+};
