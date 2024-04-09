@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import logger from "../../utils/logger.js";
+import logger from "../../../utils/logger.js";
 
 const trackSchema = new mongoose.Schema({
   spotifyId: { type: String, required: true },

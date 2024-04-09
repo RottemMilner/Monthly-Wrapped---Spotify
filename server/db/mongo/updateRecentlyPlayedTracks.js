@@ -1,8 +1,8 @@
 import { User } from "./models/user.js";
 import { insertTracks } from "./models/track.js";
-import { getRecentlyPlayedTracks } from "../utils/recentlyPlayed.js";
+import { getRecentlyPlayedTracks } from "../../api/spotifyApi.js";
 import { connectDB } from "./dbConn.js";
-import logger from "../utils/logger.js";
+import logger from "../../utils/logger.js";
 /**
  * Update the recently played tracks for a user,
  * we can time this functnio to run every X minutes to keep the user's data up to date

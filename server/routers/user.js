@@ -1,9 +1,8 @@
 import express from "express";
-
-import { User } from "../db/models/user.js";
-import { Track, insertTracks } from "../db/models/track.js";
-import { getRecentlyPlayedTracks } from "../utils/recentlyPlayed.js";
-import { addOrUpdateToken } from "../tokenRefresher/refreshTokenUtils.js";
+import { User } from "../db/mongo/models/user.js";
+import { insertTracks } from "../db/mongo/models/track.js";
+import { getRecentlyPlayedTracks } from "../api/spotifyApi.js";
+import { addOrUpdateToken } from "../db/json/utils.js";
 
 const router = new express.Router();
 

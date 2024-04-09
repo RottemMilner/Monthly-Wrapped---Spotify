@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config("../.env");
 import mongoose from "mongoose";
-import logger from "../utils/logger.js";
+import logger from "../../utils/logger.js";
 
 const uri = process.env.MONGODB_URI;
 
