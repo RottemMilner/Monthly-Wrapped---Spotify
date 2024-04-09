@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Login from "./components/Login";
 import "./App.css";
-import spotifyLogo from "./Spotify Logo.png";
 import Slideshow from "./components/Slideshow";
 import spotifyApi from "./api/spotifyApi";
 import Redirect from "./components/Callback";
@@ -61,19 +60,8 @@ function App() {
               {user && <h2>Welcome, {user.display_name || user.id}!</h2>}
             </div>
           ) : (
-            <h1>Spotify Monthly Wrapped</h1>
+            <h1>Monthly Wrapped</h1>
           )}
-          {/* <a
-            href="https://www.spotify.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <img
-              src={spotifyLogo}
-              alt="Spotify Logo"
-              className="spotify-logo"
-            />
-          </a> */}
           <nav>
             <ul>
               <li>
