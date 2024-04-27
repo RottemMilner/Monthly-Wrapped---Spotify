@@ -18,7 +18,7 @@ function TopArtists() {
   }, []);
   return (
     <div>
-      {showHeadline && <h2>Top Artists This Month</h2>}
+      {showHeadline && <h2>Your Top Artists This Month</h2>}
       <div className="atop-artists-container">
         {topArtists.map((artist, index) => (
           <div key={artist.uri + artist.name} className="atop-artists-item">

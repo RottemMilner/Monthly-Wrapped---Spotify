@@ -1,17 +1,26 @@
 // Slideshow.js
 import React, { useState, useEffect } from 'react';
+import TopTrack from './TopTrack';
 import TopTracks from './TopTracks';
+import TopArtist from './TopArtist';
 import TopArtists from './TopArtists';
 import TopGenresButton from './TopGenresButton';
+import Minutes from './Minutes';
+import WelcomePage from './WelcomePage';
 
 const Slideshow = ({ user }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isSlideshowRunning, setIsSlideshowRunning] = useState(true);
 
   const slides = [
-    <TopTracks key={0} user={user} />,
-    <TopArtists key={1} />,
-    <TopGenresButton key={2} />,
+    <WelcomePage key={0} user={user} />,
+    <Minutes key={1} user={user}/>,
+    <TopTrack key={2} />,
+    <TopTracks key={3} user={user} />,
+    <TopArtist key={4} />,
+    <TopArtists key={5} />,
+    <TopGenresButton key={6} />
+    
   ];
 
   const nextSlide = () => {

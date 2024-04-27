@@ -11,6 +11,7 @@ import { createOrUpdateUser } from "./api/api";
 function App() {
   const [user, _setUser] = useState(null);
   const [accessToken, _setAccessToken] = useState(null);
+  const [clicked, setClicked] = useState(false);
 
   const setAccessToken = (token) => {
     _setAccessToken(token);
@@ -49,7 +50,13 @@ function App() {
   const handleLogout = () => {
     setAccessToken(null);
     setUser(null);
+    setClicked(false);
   };
+
+  const handleClicked=() => {
+    setClicked(true);
+  }
+
 
   return (
     <Router>
@@ -71,18 +78,20 @@ function App() {
                   </button>
                 ) : (
                   <Link to="/login" className="login-button">
-                    login
+                    Login
                   </Link>
                 )}
               </li>
-              {user && (
-                <Link to="/wrapped" className="home-link">
-                  <h1>Click to see your Monthly Wrapped</h1>
-                </Link>
-              )}
             </ul>
           </nav>
         </header>
+        <div>
+        {user && clicked==false && (
+                <Link to="/wrapped" onClick={handleClicked}>
+                  <h1>Click to see your Monthly Wrapped</h1>
+                </Link>
+              )}
+        </div>
 
         {/* Routes */}
         <Routes>

@@ -85,7 +85,7 @@ function TopTracks({ user }) {
 
   return (
     <div>
-      {showHeadline && <h2>Top Tracks This Month</h2>}
+      {showHeadline && <h2>Your Top Tracks This Month</h2>}
       {playlistId ? (
         <button
           onClick={handleDeletePlaylist}
@@ -114,7 +114,7 @@ function TopTracks({ user }) {
               </div>
               {track.album.images.length > 0 && (
                 <img
-                  src={track.album.images[0].url} // Assuming you want to display the album art
+                  src={track.album.images[1].url} // Assuming you want to display the album art
                   alt={track.name}
                   className="aartist-image"
                 />
